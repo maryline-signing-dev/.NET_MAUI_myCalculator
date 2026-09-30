@@ -26,9 +26,11 @@ public partial class CalculatorPage : ContentPage
     {
         InitializeComponent();
 
-        // SizeChanged est déclenché au premier affichage
-        // et à chaque rotation / redimensionnement.
+        // SizeChanged est déclenché au premier affichage et à chaque rotation / redimensionnement.
         SizeChanged += (_, _) => AdaptLayout();
+
+        AngleModeLabel.Text = _engine.AngleModeText;
+        AngleModeButton.Text = _engine.AngleModeText;
 
         RefreshDisplay();
     }
@@ -195,7 +197,90 @@ public partial class CalculatorPage : ContentPage
         _engine.Exponential();
         RefreshDisplay();
     }
+    
+    // ═════════════════════ Mode angulaire ═════════════════════
 
+    private void OnAngleModeClicked(object? sender, EventArgs e)
+    {
+        _engine.ToggleAngleMode();
+
+        AngleModeLabel.Text = _engine.AngleModeText;
+        AngleModeButton.Text = _engine.AngleModeText;
+    }
+
+    // ═════════════════════ Trigonométrie ═════════════════════
+
+    // ───────────── Sinus ─────────────
+
+    private void OnSineClicked(object? sender, EventArgs e)
+    {
+        _engine.Sine();
+        RefreshDisplay();
+    }
+
+
+    // ───────────── Cosinus ─────────────
+
+    private void OnCosineClicked(object? sender, EventArgs e)
+    {
+        _engine.Cosine();
+        RefreshDisplay();
+    }
+
+
+    // ───────────── Tangente ─────────────
+
+    private void OnTangentClicked(object? sender, EventArgs e)
+    {
+        _engine.Tangent();
+        RefreshDisplay();
+    }
+
+
+    // ───────────── Arc sinus ─────────────
+
+    private void OnArcSineClicked(object? sender, EventArgs e)
+    {
+        _engine.ArcSine();
+        RefreshDisplay();
+    }
+
+
+    // ───────────── Arc cosinus ─────────────
+
+    private void OnArcCosineClicked(object? sender, EventArgs e)
+    {
+        _engine.ArcCosine();
+        RefreshDisplay();
+    }
+
+
+    // ───────────── Arc tangente ─────────────
+
+    private void OnArcTangentClicked(object? sender, EventArgs e)
+    {
+        _engine.ArcTangent();
+        RefreshDisplay();
+    }
+
+    // ═════════════════════ Constantes mathématiques ═════════════════════
+
+    // ───────────── Pi ─────────────
+
+    private void OnPiClicked(object? sender, EventArgs e)
+    {
+        _engine.InputPi();
+        RefreshDisplay();
+    }
+
+
+    // ───────────── Constante e ─────────────
+
+    private void OnEClicked(object? sender, EventArgs e)
+    {
+        _engine.InputE();
+        RefreshDisplay();
+    }
 
     // ═════════════════════ Mise à jour de l'affichage ═════════════════════
 
@@ -303,6 +388,31 @@ public partial class CalculatorPage : ContentPage
         foreach (Button key in ScientificRow2.Children.OfType<Button>())
         {
             key.WidthRequest = scientificWidth2;
+            key.HeightRequest = keyHeight;
+            key.FontSize = Math.Clamp(keyHeight * 0.30, 16, 22);
+        }
+
+        // ───────────── Troisième ligne scientifique ─────────────
+
+        double scientificWidth3 =
+            (innerWidth - 4 * KeySpacing) / 5;
+
+        foreach (Button key in ScientificRow3.Children.OfType<Button>())
+        {
+            key.WidthRequest = scientificWidth3;
+            key.HeightRequest = keyHeight;
+            key.FontSize = Math.Clamp(keyHeight * 0.28, 14, 21);
+        }
+
+
+        // ───────────── Quatrième ligne scientifique ─────────────
+
+        double scientificWidth4 =
+            (innerWidth - 2 * KeySpacing) / 3;
+
+        foreach (Button key in ScientificRow4.Children.OfType<Button>())
+        {
+            key.WidthRequest = scientificWidth4;
             key.HeightRequest = keyHeight;
             key.FontSize = Math.Clamp(keyHeight * 0.30, 16, 22);
         }

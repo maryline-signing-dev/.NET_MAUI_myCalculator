@@ -84,6 +84,30 @@ Layouts utilisés:
                    HorizontalOptions="Center"
                    Margin="0,4,0,0" />
 
+            <HorizontalStackLayout
+                    Spacing="8"
+                    HorizontalOptions="Center">
+
+                <Label x:Name="AngleModeLabel"
+                       Text="DEG"
+                       FontSize="14"
+                       FontAttributes="Bold"
+                       CharacterSpacing="1"
+                       TextColor="{StaticResource AccentSecondary}"
+                       VerticalTextAlignment="Center"
+                       SemanticProperties.Description="Mode angulaire actif" />
+
+                <Button x:Name="AngleModeButton"
+                        Text="DEG"
+                        Style="{StaticResource SpecialKey}"
+                        WidthRequest="70"
+                        HeightRequest="42"
+                        FontSize="14"
+                        Clicked="OnAngleModeClicked"
+                        SemanticProperties.Description="Changer entre degrés et radians" />
+
+            </HorizontalStackLayout>
+
             <!-- Border : cadre de l'écran d'affichage -->
             <Border BackgroundColor="{StaticResource SurfaceColor}"
                     Stroke="{StaticResource AccentSecondary}"
@@ -189,28 +213,90 @@ Layouts utilisés:
                        HorizontalOptions="Center">
 
                 <Button Text="log"
-            Style="{StaticResource SpecialKey}"
-            WidthRequest="78"
-            Clicked="OnLogClicked"
-            SemanticProperties.Description="Logarithme décimal" />
+                        Style="{StaticResource SpecialKey}"
+                        WidthRequest="78"
+                        Clicked="OnLogClicked"
+                        SemanticProperties.Description="Logarithme décimal" />
 
                 <Button Text="ln"
-            Style="{StaticResource SpecialKey}"
-            WidthRequest="78"
-            Clicked="OnNaturalLogClicked"
-            SemanticProperties.Description="Logarithme naturel" />
+                        Style="{StaticResource SpecialKey}"
+                        WidthRequest="78"
+                        Clicked="OnNaturalLogClicked"
+                        SemanticProperties.Description="Logarithme naturel" />
 
                 <Button Text="10ˣ"
-            Style="{StaticResource SpecialKey}"
-            WidthRequest="78"
-            Clicked="OnPowerOfTenClicked"
-            SemanticProperties.Description="Puissance de dix" />
+                        Style="{StaticResource SpecialKey}"
+                        WidthRequest="78"
+                        Clicked="OnPowerOfTenClicked"
+                        SemanticProperties.Description="Puissance de dix" />
 
                 <Button Text="eˣ"
-            Style="{StaticResource SpecialKey}"
-            WidthRequest="78"
-            Clicked="OnExponentialClicked"
-            SemanticProperties.Description="Exponentielle naturelle" />
+                        Style="{StaticResource SpecialKey}"
+                        WidthRequest="78"
+                        Clicked="OnExponentialClicked"
+                        SemanticProperties.Description="Exponentielle naturelle" />
+
+            </HorizontalStackLayout>
+
+            <!-- HorizontalStackLayout : fonctions trigonométriques. -->
+            <HorizontalStackLayout x:Name="ScientificRow3"
+                       Spacing="10"
+                       HorizontalOptions="Center">
+
+                <Button Text="sin"
+                    Style="{StaticResource SpecialKey}"
+                    WidthRequest="78"
+                    Clicked="OnSineClicked"
+                    SemanticProperties.Description="Sinus" />
+
+                <Button Text="cos"
+                    Style="{StaticResource SpecialKey}"
+                    WidthRequest="78"
+                    Clicked="OnCosineClicked"
+                    SemanticProperties.Description="Cosinus" />
+
+                <Button Text="tan"
+                    Style="{StaticResource SpecialKey}"
+                    WidthRequest="78"
+                    Clicked="OnTangentClicked"
+                    SemanticProperties.Description="Tangente" />
+
+                <Button Text="sin⁻¹"
+                    Style="{StaticResource SpecialKey}"
+                    WidthRequest="78"
+                    Clicked="OnArcSineClicked"
+                    SemanticProperties.Description="Arc sinus" />
+
+                <Button Text="cos⁻¹"
+                    Style="{StaticResource SpecialKey}"
+                    WidthRequest="78"
+                    Clicked="OnArcCosineClicked"
+                    SemanticProperties.Description="Arc cosinus" />
+
+            </HorizontalStackLayout>
+
+            <!-- HorizontalStackLayout : constantes et fonctions trigonométriques inverses. -->
+            <HorizontalStackLayout x:Name="ScientificRow4"
+                       Spacing="10"
+                       HorizontalOptions="Center">
+
+                <Button Text="tan⁻¹"
+                    Style="{StaticResource SpecialKey}"
+                    WidthRequest="78"
+                    Clicked="OnArcTangentClicked"
+                    SemanticProperties.Description="Arc tangente" />
+
+                <Button Text="π"
+                    Style="{StaticResource SpecialKey}"
+                    WidthRequest="78"
+                    Clicked="OnPiClicked"
+                    SemanticProperties.Description="Constante pi" />
+
+                <Button Text="e"
+                    Style="{StaticResource SpecialKey}"
+                    WidthRequest="78"
+                    Clicked="OnEClicked"
+                    SemanticProperties.Description="Constante e" />
 
             </HorizontalStackLayout>
 

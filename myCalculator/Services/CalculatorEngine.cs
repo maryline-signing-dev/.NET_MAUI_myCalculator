@@ -17,6 +17,9 @@ public class CalculatorEngine
 
     private bool _hasError;
 
+    // true = degrés, false = radians
+    private bool _useDegrees = true;
+
 
     // ═════════════════════ Propriétés publiques ═════════════════════
 
@@ -41,6 +44,13 @@ public class CalculatorEngine
 
     // Indique si la calculatrice est actuellement en erreur.
     public bool HasError => _hasError;
+
+
+    // Affiche directement DEG ou RAD
+    public bool UseDegrees => _useDegrees;
+
+    public string AngleModeText =>
+        _useDegrees ? "DEG" : "RAD";
 
 
     // ═════════════════════ Saisie des nombres ═════════════════════
@@ -455,6 +465,133 @@ public class CalculatorEngine
         _shouldResetInput = true;
     }
 
+    // ───────────── Changement DEG / RAD ─────────────
+
+    public void ToggleAngleMode()
+    {
+        _useDegrees = !_useDegrees;
+    }
+
+    // ───────────── Constante π ─────────────
+
+    public void InputPi()
+    {
+        if (_hasError)
+            return;
+
+        _currentInput = FormatNumber(Math.PI);
+
+        _shouldResetInput = true;
+    }
+
+
+    // ───────────── Constante e ─────────────
+
+    public void InputE()
+    {
+        if (_hasError)
+            return;
+
+        _currentInput = FormatNumber(Math.E);
+
+        _shouldResetInput = true;
+    }
+
+    // ═════════════════════ Trigonométrie ═════════════════════
+
+    // ───────────── Conversion degrés → radians ─────────────
+
+    private double ToRadians(double angle)
+    {
+        return _useDegrees
+            ? angle * Math.PI / 180.0
+            : angle;
+    }
+
+
+    // ───────────── Conversion radians → degrés ─────────────
+
+    private double FromRadians(double angle)
+    {
+        return _useDegrees
+            ? angle * 180.0 / Math.PI
+            : angle;
+    }
+
+
+    // ───────────── Sinus ─────────────
+
+    public void Sine()
+    {
+        if (_hasError)
+            return;
+
+        double value = ParseCurrentValue();
+
+        if (_hasError)
+            return;
+
+        double radians = ToRadians(value);
+
+        double result = Math.Sin(radians);
+
+        _currentInput = FormatNumber(result);
+
+        _shouldResetInput = true;
+    }
+
+
+    // ───────────── Cosinus ─────────────
+
+    public void Cosine()
+    {
+        if (_hasError)
+            return;
+
+        double value = ParseCurrentValue();
+
+        if (_hasError)
+            return;
+
+        double radians = ToRadians(value);
+
+        double result = Math.Cos(radians);
+
+        _currentInput = FormatNumber(result);
+
+        _shouldResetInput = true;
+    }
+
+
+    // ───────────── Tangente ─────────────
+
+    public void Tangent()
+    {
+        if (_hasError)
+            return;
+
+        double value = ParseCurrentValue();
+
+        if (_hasError)
+            return;
+
+        double radians = ToRadians(value);
+
+        double cos = Math.Cos(radians);
+
+        if (Math.Abs(cos) < 1e-12)
+        {
+            SetError();
+            return;
+        }
+
+        double result = Math.Tan(radians);
+
+        _currentInput = FormatNumber(result);
+
+        _shouldResetInput = true;
+    }
+
     // ───────────── Retour arrière ─────────────
 
     public void Backspace()
@@ -488,6 +625,80 @@ public class CalculatorEngine
         {
             _currentInput = "0";
         }
+    }
+
+    // ───────────── Arc sinus ─────────────
+
+    public void ArcSine()
+    {
+        if (_hasError)
+            return;
+
+        double value = ParseCurrentValue();
+
+        if (_hasError)
+            return;
+
+        if (value < -1 || value > 1)
+        {
+            SetError();
+            return;
+        }
+
+        double result = Math.Asin(value);
+
+        _currentInput = FormatNumber(
+            FromRadians(result));
+
+        _shouldResetInput = true;
+    }
+
+
+    // ───────────── Arc cosinus ─────────────
+
+    public void ArcCosine()
+    {
+        if (_hasError)
+            return;
+
+        double value = ParseCurrentValue();
+
+        if (_hasError)
+            return;
+
+        if (value < -1 || value > 1)
+        {
+            SetError();
+            return;
+        }
+
+        double result = Math.Acos(value);
+
+        _currentInput = FormatNumber(
+            FromRadians(result));
+
+        _shouldResetInput = true;
+    }
+
+
+    // ───────────── Arc tangente ─────────────
+
+    public void ArcTangent()
+    {
+        if (_hasError)
+            return;
+
+        double value = ParseCurrentValue();
+
+        if (_hasError)
+            return;
+
+        double result = Math.Atan(value);
+
+        _currentInput = FormatNumber(
+            FromRadians(result));
+
+        _shouldResetInput = true;
     }
 
 
