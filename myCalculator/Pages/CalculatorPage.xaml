@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8" ?>
+    
+<!-- Page principale
+Layouts utilisés:
+    - ScrollView
+    - VerticalStackLayout
+    - Border
+    - HorinzontalStackLayout
+    - Grid
+-->
+    
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="myCalculator.Pages.CalculatorPage"
+             Title="myCalculator"
+             Shell.NavBarIsVisible="False"
+             BackgroundColor="#171416">
+
+    <!-- Palette et styles  -->
+    <ContentPage.Resources>
+        <ResourceDictionary>
+
+            <!-- Palette (les couleurs doivent être déclarées avant les styles qui les utilisent) -->
+            <Color x:Key="BackgroundColor">#171416</Color>
+            <!-- fond général-->
+            <Color x:Key="SurfaceColor">#282124</Color>
+            <!-- surfaces / touches-->
+            <Color x:Key="TextColor">#F7EDE7</Color>
+            <!-- texte principal-->
+            <Color x:Key="AccentPrimary">#C9827C</Color>
+            <!-- opérations, = -->
+            <Color x:Key="AccentSecondary">#D8A58F</Color>
+            <!-- touches spéciales, détails -->
+
+            <!-- Base commune à toutes les touches -->
+            <Style x:Key="KeyBase" TargetType="Button">
+                <Setter Property="FontSize" Value="24" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="CornerRadius" Value="18" />
+                <Setter Property="Padding" Value="0" />
+                <Setter Property="MinimumWidthRequest" Value="0" />
+                <Setter Property="HeightRequest" Value="64" />
+            </Style>
+
+            <!-- Chiffres et point  -->
+            <Style x:Key="DigitKey" TargetType="Button" BasedOn="{StaticResource KeyBase}">
+                <Setter Property="BackgroundColor" Value="{StaticResource SurfaceColor}" />
+                <Setter Property="TextColor" Value="{StaticResource TextColor}" />
+            </Style>
+
+            <!-- Opérations et = : accent principal-->
+            <Style x:Key="OperatorKey" TargetType="Button" BasedOn="{StaticResource KeyBase}">
+                <Setter Property="BackgroundColor" Value="{StaticResource AccentPrimary}" />
+                <Setter Property="TextColor" Value="{StaticResource BackgroundColor}" />
+            </Style>
+
+            <!-- AC, ⌫, %, ± : accent secondaire -->
+            <Style x:Key="SpecialKey" TargetType="Button" BasedOn="{StaticResource KeyBase}">
+                <Setter Property="BackgroundColor" Value="{StaticResource AccentSecondary}" />
+                <Setter Property="TextColor" Value="{StaticResource BackgroundColor}" />
+            </Style>
+
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <!-- ScrollView : défilement possible -->
+    <ScrollView x:Name="RootScroll"
+                Orientation="Vertical"
+                VerticalScrollBarVisibility="Never">
+
+        <!-- VerticalStackLayout : organise les grandes zones de haut en bas.-->
+        <VerticalStackLayout x:Name="ContentStack"
+                             Padding="16,12,16,24"
+                             Spacing="14"
+                             HorizontalOptions="Center">
+
+            <!-- En-tête -->
+            <Label Text="Scientific Calculator"
+                   FontSize="16"
+                   FontAttributes="Bold"
+                   CharacterSpacing="1.5"
+                   TextColor="{StaticResource AccentSecondary}"
+                   HorizontalOptions="Center"
+                   Margin="0,4,0,0" />
+
+            <!-- Border : cadre de l'écran d'affichage -->
+            <Border BackgroundColor="{StaticResource SurfaceColor}"
+                    Stroke="{StaticResource AccentSecondary}"
+                    StrokeThickness="1"
+                    Padding="16,12">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="22" />
+                </Border.StrokeShape>
+
+                <VerticalStackLayout Spacing="4">
+
+                    <!-- Opération en cours (au-dessus du résultat) -->
+                    <Label x:Name="OperationLabel"
+                           Text=""
+                           FontSize="18"
+                           TextColor="{StaticResource AccentSecondary}"
+                           HorizontalTextAlignment="End"
+                           LineBreakMode="HeadTruncation"
+                           MaxLines="1"
+                           MinimumHeightRequest="26"
+                           SemanticProperties.Description="Opération en cours" />
+
+                    <!-- Résultat / nombre saisi  -->
+                    <Label x:Name="ResultLabel"
+                           Text="0"
+                           FontSize="56"
+                           FontAttributes="Bold"
+                           TextColor="{StaticResource TextColor}"
+                           HorizontalTextAlignment="End"
+                           VerticalTextAlignment="End"
+                           LineBreakMode="NoWrap"
+                           MaxLines="1"
+                           SemanticProperties.Description="Résultat" />
+
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- HorizontalStackLayout : rangée des touches secondaires. -->
+            <HorizontalStackLayout x:Name="SecondaryRow"
+                                   Spacing="10"
+                                   HorizontalOptions="Center">
+
+                <Button Text="AC"
+                        Style="{StaticResource SpecialKey}"
+                        WidthRequest="90"
+                        Clicked="OnClearClicked"
+                        SemanticProperties.Description="Tout effacer" />
+
+                <Button Text="⌫"
+                        Style="{StaticResource SpecialKey}"
+                        WidthRequest="90"
+                        Clicked="OnBackspaceClicked"
+                        SemanticProperties.Description="Effacer le dernier caractère" />
+
+                <Button Text="%"
+                        Style="{StaticResource SpecialKey}"
+                        WidthRequest="90"
+                        Clicked="OnPercentClicked"
+                        SemanticProperties.Description="Pourcentage" />
+
+            </HorizontalStackLayout>
+
+            <!-- Grid : clavier. Le clavier s'adapte à toutes les tailles d'écran. -->
+            <Grid x:Name="KeypadGrid"
+                  ColumnDefinitions="*,*,*,*"
+                  RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+                  ColumnSpacing="10"
+                  RowSpacing="10">
+
+                <!-- Ligne 0 : 7 8 9 ÷ -->
+                <Button Grid.Row="0" Grid.Column="0" Text="7" Style="{StaticResource DigitKey}" Clicked="OnDigitClicked" />
+                <Button Grid.Row="0" Grid.Column="1" Text="8" Style="{StaticResource DigitKey}" Clicked="OnDigitClicked" />
+                <Button Grid.Row="0" Grid.Column="2" Text="9" Style="{StaticResource DigitKey}" Clicked="OnDigitClicked" />
+                <Button Grid.Row="0" Grid.Column="3" Text="÷" Style="{StaticResource OperatorKey}" Clicked="OnOperatorClicked"
+                        SemanticProperties.Description="Diviser" />
+
+                <!-- Ligne 1 : 4 5 6 × -->
+                <Button Grid.Row="1" Grid.Column="0" Text="4" Style="{StaticResource DigitKey}" Clicked="OnDigitClicked" />
+                <Button Grid.Row="1" Grid.Column="1" Text="5" Style="{StaticResource DigitKey}" Clicked="OnDigitClicked" />
+                <Button Grid.Row="1" Grid.Column="2" Text="6" Style="{StaticResource DigitKey}" Clicked="OnDigitClicked" />
+                <Button Grid.Row="1" Grid.Column="3" Text="×" Style="{StaticResource OperatorKey}" Clicked="OnOperatorClicked"
+                        SemanticProperties.Description="Multiplier" />
+
+                <!-- Ligne 2 : 1 2 3 − -->
+                <Button Grid.Row="2" Grid.Column="0" Text="1" Style="{StaticResource DigitKey}" Clicked="OnDigitClicked" />
+                <Button Grid.Row="2" Grid.Column="1" Text="2" Style="{StaticResource DigitKey}" Clicked="OnDigitClicked" />
+                <Button Grid.Row="2" Grid.Column="2" Text="3" Style="{StaticResource DigitKey}" Clicked="OnDigitClicked" />
+                <Button Grid.Row="2" Grid.Column="3" Text="−" Style="{StaticResource OperatorKey}" Clicked="OnOperatorClicked"
+                        SemanticProperties.Description="Soustraire" />
+
+                <!-- Ligne 3 : ± 0 . + -->
+                <Button Grid.Row="3" Grid.Column="0" Text="±" Style="{StaticResource SpecialKey}" Clicked="OnSignClicked"
+                        SemanticProperties.Description="Changer le signe" />
+                <Button Grid.Row="3" Grid.Column="1" Text="0" Style="{StaticResource DigitKey}" Clicked="OnDigitClicked" />
+                <Button Grid.Row="3" Grid.Column="2" Text="." Style="{StaticResource DigitKey}" Clicked="OnDecimalClicked"
+                        SemanticProperties.Description="Virgule" />
+                <Button Grid.Row="3" Grid.Column="3" Text="+" Style="{StaticResource OperatorKey}" Clicked="OnOperatorClicked"
+                        SemanticProperties.Description="Additionner" />
+
+                <!-- Ligne 4 : = sur toute la largeur (ColumnSpan="4") -->
+                <Button Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="4" Text="="
+                        Style="{StaticResource OperatorKey}" Clicked="OnEqualsClicked"
+                        SemanticProperties.Description="Égal" />
+
+            </Grid>
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
