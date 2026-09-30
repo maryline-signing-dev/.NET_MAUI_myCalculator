@@ -113,6 +113,52 @@ public partial class CalculatorPage : ContentPage
         RefreshDisplay();
     }
 
+    // ═════════════════════ Fonctions scientifiques ═════════════════════
+
+    // ───────────── Carré ─────────────
+
+    private void OnSquareClicked(object? sender, EventArgs e)
+    {
+        _engine.Square();
+        RefreshDisplay();
+    }
+
+
+    // ───────────── Racine carrée ─────────────
+
+    private void OnSquareRootClicked(object? sender, EventArgs e)
+    {
+        _engine.SquareRoot();
+        RefreshDisplay();
+    }
+
+
+    // ───────────── Puissance ─────────────
+
+    private void OnPowerClicked(object? sender, EventArgs e)
+    {
+        _engine.SetPowerOperator();
+        RefreshDisplay();
+    }
+
+
+    // ───────────── Racine n-ième ─────────────
+
+    private void OnRootClicked(object? sender, EventArgs e)
+    {
+        _engine.SetRootOperator();
+        RefreshDisplay();
+    }
+
+
+    // ───────────── Factorielle ─────────────
+
+    private void OnFactorialClicked(object? sender, EventArgs e)
+    {
+        _engine.Factorial();
+        RefreshDisplay();
+    }
+
 
     // ═════════════════════ Mise à jour de l'affichage ═════════════════════
 
@@ -132,10 +178,6 @@ public partial class CalculatorPage : ContentPage
 
     // ───────────── Adaptation de la taille du résultat ─────────────
 
-    /// <summary>
-    /// Réduit la police du résultat quand le texte est long,
-    /// afin qu'il ne soit pas coupé.
-    /// </summary>
     private void FitResultFont()
     {
         int length = Math.Max(ResultLabel.Text?.Length ?? 1, 1);
@@ -206,6 +248,19 @@ public partial class CalculatorPage : ContentPage
             key.FontSize = keyFont;
         }
 
+        // ───────────── Fonctions scientifiques ─────────────
+
+        double scientificWidth =
+            (innerWidth - 4 * KeySpacing) / 5;
+
+        foreach (Button key in ScientificRow.Children.OfType<Button>())
+        {
+            key.WidthRequest = scientificWidth;
+            key.HeightRequest = keyHeight;
+            key.FontSize = Math.Clamp(keyHeight * 0.30, 16, 22);
+        }
+
+        
         // ───────────── Affichage du résultat ─────────────
 
         _resultMaxWidth =

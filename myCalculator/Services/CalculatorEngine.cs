@@ -54,8 +54,7 @@ public class CalculatorEngine
 
         ClearErrorIfNeeded();
 
-        // Après un opérateur ou un calcul,
-        // le prochain chiffre commence un nouveau nombre.
+        // Après un opérateur ou un calcul, le prochain chiffre commence un nouveau nombre.
         if (_shouldResetInput)
         {
             _currentInput = digit.ToString();
@@ -84,8 +83,7 @@ public class CalculatorEngine
     {
         ClearErrorIfNeeded();
 
-        // Après un opérateur ou un calcul,
-        // on commence directement un nouveau nombre décimal.
+        // Après un opérateur ou un calcul, on commence directement un nouveau nombre décimal.
         if (_shouldResetInput)
         {
             _currentInput = "0.";
@@ -116,8 +114,7 @@ public class CalculatorEngine
         if (_hasError)
             return;
 
-        // Si une opération est déjà en attente,
-        // on la calcule avant de prendre le nouvel opérateur.
+        // Si une opération est déjà en attente,  on la calcule avant de prendre le nouvel opérateur.
         if (_firstOperand is not null &&
             _operator is not null &&
             !_shouldResetInput)
@@ -182,6 +179,36 @@ public class CalculatorEngine
                 result = _firstOperand.Value / secondOperand;
                 break;
 
+            case "xʸ":
+
+                result = Math.Pow(_firstOperand.Value, secondOperand);
+                break;
+
+            case "ⁿ√x":
+
+                double rootIndex = _firstOperand.Value;
+                double radicand = secondOperand;
+
+                if (rootIndex == 0)
+                {
+                    SetError();
+                    return;
+                }
+
+                // Pour une racine paire, un nombre négatif
+                if (rootIndex % 2 == 0 &&
+                    radicand < 0)
+                {
+                    SetError();
+                    return;
+                }
+
+                result = Math.Pow(
+                    radicand,
+                    1.0 / rootIndex);
+
+                break;
+
             default:
                 return;
         }
@@ -235,6 +262,101 @@ public class CalculatorEngine
         _currentInput = FormatNumber(value);
     }
 
+    // ───────────── Carré ─────────────
+
+    public void Square()
+    {
+        if (_hasError)
+            return;
+
+        double value = ParseCurrentValue();
+
+        if (_hasError)
+            return;
+
+        double result = value * value;
+
+        _currentInput = FormatNumber(result);
+
+        _shouldResetInput = true;
+    }
+
+    // ───────────── Racine carrée ─────────────
+
+    public void SquareRoot()
+    {
+        if (_hasError)
+            return;
+
+        double value = ParseCurrentValue();
+
+        if (_hasError)
+            return;
+
+        if (value < 0)
+        {
+            SetError();
+            return;
+        }
+
+        double result = Math.Sqrt(value);
+
+        _currentInput = FormatNumber(result);
+
+        _shouldResetInput = true;
+    }
+
+    // ───────────── Racine n-ième ─────────────
+
+    public void SetRootOperator()
+    {
+        SetOperator("ⁿ√x");
+    }
+
+    // ───────────── Puissance ─────────────
+
+    public void SetPowerOperator()
+    {
+        SetOperator("xʸ");
+    }
+
+    // ───────────── Factorielle ─────────────
+
+    public void Factorial()
+    {
+        if (_hasError)
+            return;
+
+        double value = ParseCurrentValue();
+
+        if (_hasError)
+            return;
+
+        if (value < 0 ||
+            value != Math.Truncate(value))
+        {
+            SetError();
+            return;
+        }
+
+        // Limite pratique pour éviter un résultat beaucoup trop grand pour un double.
+        if (value > 170)
+        {
+            SetError();
+            return;
+        }
+
+        double result = 1;
+
+        for (int i = 2; i <= value; i++)
+        {
+            result *= i;
+        }
+
+        _currentInput = FormatNumber(result);
+
+        _shouldResetInput = true;
+    }
 
     // ───────────── Retour arrière ─────────────
 
@@ -246,8 +368,7 @@ public class CalculatorEngine
             return;
         }
 
-        // Si le résultat vient d'être calculé,
-        // le retour arrière recommence sur 0.
+        // Si le résultat vient d'être calculé,le retour arrière recommence sur 0.
         if (_shouldResetInput)
         {
             _currentInput = "0";
@@ -321,7 +442,9 @@ public class CalculatorEngine
             "+" or
             "−" or
             "×" or
-            "÷";
+            "÷" or
+            "xʸ" or
+            "ⁿ√x"; 
     }
 
 

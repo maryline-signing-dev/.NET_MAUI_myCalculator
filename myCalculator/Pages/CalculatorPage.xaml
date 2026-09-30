@@ -145,6 +145,43 @@ Layouts utilisés:
 
             </HorizontalStackLayout>
 
+            <!-- HorizontalStackLayout : fonctions scientifiques. -->
+            <HorizontalStackLayout x:Name="ScientificRow"
+                       Spacing="10"
+                       HorizontalOptions="Center">
+
+                <Button Text="x²"
+                        Style="{StaticResource SpecialKey}"
+                        WidthRequest="78"
+                        Clicked="OnSquareClicked"
+                        SemanticProperties.Description="Élever au carré" />
+
+                <Button Text="√x"
+                        Style="{StaticResource SpecialKey}"
+                        WidthRequest="78"
+                        Clicked="OnSquareRootClicked"
+                        SemanticProperties.Description="Racine carrée" />
+
+                <Button Text="xʸ"
+                        Style="{StaticResource SpecialKey}"
+                        WidthRequest="78"
+                        Clicked="OnPowerClicked"
+                        SemanticProperties.Description="Élever à une puissance" />
+
+                <Button Text="ⁿ√x"
+                        Style="{StaticResource SpecialKey}"
+                        WidthRequest="78"
+                        Clicked="OnRootClicked"
+                        SemanticProperties.Description="Racine n-ième" />
+
+                <Button Text="n!"
+                        Style="{StaticResource SpecialKey}"
+                        WidthRequest="78"
+                        Clicked="OnFactorialClicked"
+                        SemanticProperties.Description="Factorielle" />
+
+            </HorizontalStackLayout>
+
             <!-- Grid : clavier. Le clavier s'adapte à toutes les tailles d'écran. -->
             <Grid x:Name="KeypadGrid"
                   ColumnDefinitions="*,*,*,*"
