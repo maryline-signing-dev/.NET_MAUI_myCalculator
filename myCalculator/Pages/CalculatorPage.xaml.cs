@@ -1,87 +1,218 @@
-using System;
+﻿using System;
+using System.Linq;
+using myCalculator.Services;
 
 namespace myCalculator.Pages;
 
 public partial class CalculatorPage : ContentPage
 {
+    // ═════════════════════ Réglages d'affichage ═════════════════════
+
+    private const double MaxContentWidth = 480;
+    private const double PagePadding = 16;
+    private const double BorderPadding = 16;
+    private const double KeySpacing = 10;
+
+    private double _resultMaxWidth = 280;
+    private double _resultMaxFont = 56;
+
+    // Moteur de calcul : contient toute la logique de la calculatrice.
+    private readonly CalculatorEngine _engine = new();
+
+
+    // ═════════════════════ Initialisation ═════════════════════
+
     public CalculatorPage()
     {
         InitializeComponent();
+
+        // SizeChanged est déclenché au premier affichage
+        // et à chaque rotation / redimensionnement.
+        SizeChanged += (_, _) => AdaptLayout();
+
+        RefreshDisplay();
     }
 
-    // TOUCHES NUM�RIQUES
 
-    private void OnDigitClicked(object sender, EventArgs e)
+    // ═════════════════════ Gestionnaires d'événements ═════════════════════
+
+    // ───────────── Touches numériques ─────────────
+
+    private void OnDigitClicked(object? sender, EventArgs e)
     {
-        if (sender is Button button)
+        if (sender is Button button && button.Text.Length == 1)
         {
-            string digit = button.Text;
-
-            // Test temporaire
-            OperationLabel.Text = $"Touche : {digit}";
+            _engine.InputDigit(button.Text[0]);
+            RefreshDisplay();
         }
     }
 
-    // OP�RATEURS
 
-    private void OnOperatorClicked(object sender, EventArgs e)
+    // ───────────── Opérateurs ─────────────
+
+    private void OnOperatorClicked(object? sender, EventArgs e)
     {
         if (sender is Button button)
         {
-            string operatorSymbol = button.Text;
-
-            // Test temporaire
-            OperationLabel.Text = $"Op�rateur : {operatorSymbol}";
+            _engine.SetOperator(button.Text);
+            RefreshDisplay();
         }
     }
 
-    // NOMBRE D�CIMAL
 
-    private void OnDecimalClicked(object sender, EventArgs e)
+    // ───────────── Nombre décimal ─────────────
+
+    private void OnDecimalClicked(object? sender, EventArgs e)
     {
-        // Test temporaire
-        OperationLabel.Text = "D�cimal";
+        _engine.InputDecimal();
+        RefreshDisplay();
     }
 
-    // CHANGEMENT DE SIGNE
 
-    private void OnSignClicked(object sender, EventArgs e)
+    // ───────────── Changement de signe ─────────────
+
+    private void OnSignClicked(object? sender, EventArgs e)
     {
-        // Test temporaire
-        OperationLabel.Text = "Changement de signe";
+        _engine.ToggleSign();
+        RefreshDisplay();
     }
 
-    // EFFACER LE DERNIER CARACT�RE
 
-    private void OnBackspaceClicked(object sender, EventArgs e)
+    // ───────────── Effacer le dernier caractère ─────────────
+
+    private void OnBackspaceClicked(object? sender, EventArgs e)
     {
-        // Test temporaire
-        OperationLabel.Text = "Retour arri�re";
+        _engine.Backspace();
+        RefreshDisplay();
     }
 
-    // POURCENTAGE
 
-    private void OnPercentClicked(object sender, EventArgs e)
+    // ───────────── Pourcentage ─────────────
+
+    private void OnPercentClicked(object? sender, EventArgs e)
     {
-        // Test temporaire
-        OperationLabel.Text = "Pourcentage";
+        _engine.Percent();
+        RefreshDisplay();
     }
 
-    // TOUT EFFACER
 
-    private void OnClearClicked(object sender, EventArgs e)
+    // ───────────── Tout effacer ─────────────
+
+    private void OnClearClicked(object? sender, EventArgs e)
     {
-        // Test temporaire
-        OperationLabel.Text = "";
-        ResultLabel.Text = "0";
+        _engine.Clear();
+        RefreshDisplay();
     }
 
-    // �GAL
 
-    private void OnEqualsClicked(object sender, EventArgs e)
+    // ───────────── Égal ─────────────
+
+    private void OnEqualsClicked(object? sender, EventArgs e)
     {
-        // Test temporaire
-        OperationLabel.Text = "Calcul";
+        _engine.Calculate();
+        RefreshDisplay();
+    }
+
+
+    // ═════════════════════ Mise à jour de l'affichage ═════════════════════
+
+    private void RefreshDisplay()
+    {
+        OperationLabel.Text = _engine.ExpressionText;
+        ResultLabel.Text = _engine.DisplayText;
+
+        // Un message d'erreur est affiché dans la couleur d'accent principale.
+        ResultLabel.TextColor = _engine.HasError
+            ? (Color)Resources["AccentPrimary"]
+            : (Color)Resources["TextColor"];
+
+        FitResultFont();
+    }
+
+
+    // ───────────── Adaptation de la taille du résultat ─────────────
+
+    /// <summary>
+    /// Réduit la police du résultat quand le texte est long,
+    /// afin qu'il ne soit pas coupé.
+    /// </summary>
+    private void FitResultFont()
+    {
+        int length = Math.Max(ResultLabel.Text?.Length ?? 1, 1);
+
+        const double averageCharWidthRatio = 0.62;
+
+        double fitted = _resultMaxWidth / (length * averageCharWidthRatio);
+
+        ResultLabel.FontSize = Math.Clamp(
+            fitted,
+            22,
+            _resultMaxFont);
+    }
+
+
+    // ═════════════════════ Adaptation à l'écran ═════════════════════
+
+    // ───────────── Portrait / paysage / petits écrans ─────────────
+
+    private void AdaptLayout()
+    {
+        if (Width <= 0 || Height <= 0)
+            return;
+
+        bool landscape = Width > Height;
+
+        // Largeur maximale du contenu.
+        double contentWidth = Math.Min(Width, MaxContentWidth);
+
+        ContentStack.WidthRequest = contentWidth;
+
+        // Largeur réellement disponible à l'intérieur du contenu.
+        double innerWidth = contentWidth - 2 * PagePadding;
+
+        // En paysage, davantage d'espace vertical est disponible
+        // pour les touches.
+        double reservedHeight = landscape ? 150 : 250;
+
+        double minKey = landscape ? 40 : 52;
+
+        double keyHeight = Math.Clamp(
+            (Height - reservedHeight) / 6 - KeySpacing,
+            minKey,
+            80);
+
+        double keyFont = Math.Clamp(
+            keyHeight * 0.38,
+            18,
+            28);
+
+        // ───────────── Touches du clavier ─────────────
+
+        foreach (Button key in KeypadGrid.Children.OfType<Button>())
+        {
+            key.HeightRequest = keyHeight;
+            key.FontSize = keyFont;
+        }
+
+        // ───────────── Touches secondaires ─────────────
+
+        double secondaryWidth =
+            (innerWidth - 2 * KeySpacing) / 3;
+
+        foreach (Button key in SecondaryRow.Children.OfType<Button>())
+        {
+            key.WidthRequest = secondaryWidth;
+            key.HeightRequest = keyHeight;
+            key.FontSize = keyFont;
+        }
+
+        // ───────────── Affichage du résultat ─────────────
+
+        _resultMaxWidth =
+            innerWidth - 2 * BorderPadding - 2;
+
+        _resultMaxFont = landscape ? 40 : 56;
+
+        FitResultFont();
     }
 }
-
