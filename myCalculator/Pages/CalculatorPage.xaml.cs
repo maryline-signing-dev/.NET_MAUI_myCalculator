@@ -159,6 +159,43 @@ public partial class CalculatorPage : ContentPage
         RefreshDisplay();
     }
 
+    // ═════════════════════ Logarithmes et exponentielles ═════════════════════
+
+    // ───────────── Logarithme décimal ─────────────
+
+    private void OnLogClicked(object? sender, EventArgs e)
+    {
+        _engine.Logarithm();
+        RefreshDisplay();
+    }
+
+
+    // ───────────── Logarithme naturel ─────────────
+
+    private void OnNaturalLogClicked(object? sender, EventArgs e)
+    {
+        _engine.NaturalLogarithm();
+        RefreshDisplay();
+    }
+
+
+    // ───────────── Puissance de 10 ─────────────
+
+    private void OnPowerOfTenClicked(object? sender, EventArgs e)
+    {
+        _engine.PowerOfTen();
+        RefreshDisplay();
+    }
+
+
+    // ───────────── Exponentielle naturelle ─────────────
+
+    private void OnExponentialClicked(object? sender, EventArgs e)
+    {
+        _engine.Exponential();
+        RefreshDisplay();
+    }
+
 
     // ═════════════════════ Mise à jour de l'affichage ═════════════════════
 
@@ -194,8 +231,6 @@ public partial class CalculatorPage : ContentPage
 
 
     // ═════════════════════ Adaptation à l'écran ═════════════════════
-
-    // ───────────── Portrait / paysage / petits écrans ─────────────
 
     private void AdaptLayout()
     {
@@ -260,7 +295,18 @@ public partial class CalculatorPage : ContentPage
             key.FontSize = Math.Clamp(keyHeight * 0.30, 16, 22);
         }
 
-        
+        // ───────────── Deuxième ligne scientifique ─────────────
+
+        double scientificWidth2 =
+            (innerWidth - 3 * KeySpacing) / 4;
+
+        foreach (Button key in ScientificRow2.Children.OfType<Button>())
+        {
+            key.WidthRequest = scientificWidth2;
+            key.HeightRequest = keyHeight;
+            key.FontSize = Math.Clamp(keyHeight * 0.30, 16, 22);
+        }
+
         // ───────────── Affichage du résultat ─────────────
 
         _resultMaxWidth =

@@ -72,9 +72,10 @@ Layouts utilisés:
         <VerticalStackLayout x:Name="ContentStack"
                              Padding="16,12,16,24"
                              Spacing="14"
-                             HorizontalOptions="Center">
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center">
 
-            <!-- En-tête -->
+                <!-- En-tête -->
             <Label Text="Scientific Calculator"
                    FontSize="16"
                    FontAttributes="Bold"
@@ -179,6 +180,37 @@ Layouts utilisés:
                         WidthRequest="78"
                         Clicked="OnFactorialClicked"
                         SemanticProperties.Description="Factorielle" />
+
+            </HorizontalStackLayout>
+
+            <!-- HorizontalStackLayout : logarithmes et exponentielles. -->
+            <HorizontalStackLayout x:Name="ScientificRow2"
+                       Spacing="10"
+                       HorizontalOptions="Center">
+
+                <Button Text="log"
+            Style="{StaticResource SpecialKey}"
+            WidthRequest="78"
+            Clicked="OnLogClicked"
+            SemanticProperties.Description="Logarithme décimal" />
+
+                <Button Text="ln"
+            Style="{StaticResource SpecialKey}"
+            WidthRequest="78"
+            Clicked="OnNaturalLogClicked"
+            SemanticProperties.Description="Logarithme naturel" />
+
+                <Button Text="10ˣ"
+            Style="{StaticResource SpecialKey}"
+            WidthRequest="78"
+            Clicked="OnPowerOfTenClicked"
+            SemanticProperties.Description="Puissance de dix" />
+
+                <Button Text="eˣ"
+            Style="{StaticResource SpecialKey}"
+            WidthRequest="78"
+            Clicked="OnExponentialClicked"
+            SemanticProperties.Description="Exponentielle naturelle" />
 
             </HorizontalStackLayout>
 

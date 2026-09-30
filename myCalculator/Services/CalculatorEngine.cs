@@ -206,7 +206,14 @@ public class CalculatorEngine
                 result = Math.Pow(
                     radicand,
                     1.0 / rootIndex);
+                break;
 
+            case "10ˣ":
+                result = Math.Pow(10, secondOperand);
+                break;
+
+            case "eˣ":
+                result = Math.Exp(secondOperand);
                 break;
 
             default:
@@ -244,6 +251,96 @@ public class CalculatorEngine
         }
     }
 
+    // ───────────── Logarithme décimal ─────────────
+
+    public void Logarithm()
+    {
+        if (_hasError)
+            return;
+
+        double value = ParseCurrentValue();
+
+        if (_hasError)
+            return;
+
+        if (value <= 0)
+        {
+            SetError();
+            return;
+        }
+
+        double result = Math.Log10(value);
+
+        _currentInput = FormatNumber(result);
+
+        _shouldResetInput = true;
+    }
+
+
+    // ───────────── Logarithme naturel ─────────────
+
+    public void NaturalLogarithm()
+    {
+        if (_hasError)
+            return;
+
+        double value = ParseCurrentValue();
+
+        if (_hasError)
+            return;
+
+        if (value <= 0)
+        {
+            SetError();
+            return;
+        }
+
+        double result = Math.Log(value);
+
+        _currentInput = FormatNumber(result);
+
+        _shouldResetInput = true;
+    }
+
+
+    // ───────────── Puissance de 10 ─────────────
+
+    public void PowerOfTen()
+    {
+        if (_hasError)
+            return;
+
+        double value = ParseCurrentValue();
+
+        if (_hasError)
+            return;
+
+        double result = Math.Pow(10, value);
+
+        _currentInput = FormatNumber(result);
+
+        _shouldResetInput = true;
+    }
+
+
+    // ───────────── Exponentielle naturelle ─────────────
+
+    public void Exponential()
+    {
+        if (_hasError)
+            return;
+
+        double value = ParseCurrentValue();
+
+        if (_hasError)
+            return;
+
+        double result = Math.Exp(value);
+
+        _currentInput = FormatNumber(result);
+
+        _shouldResetInput = true;
+    }
 
     // ───────────── Pourcentage ─────────────
 
