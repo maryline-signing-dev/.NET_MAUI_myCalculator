@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<Shell
+<!--<Shell
     x:Class="myCalculator.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -40,5 +40,19 @@
             </sf:SfSegmentedControl>
         </Grid>
     </Shell.FlyoutFooter>
+
+</Shell>  -->
+    
+<Shell
+    x:Class="myCalculator.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:myCalculator.Pages"
+    Shell.FlyoutBehavior="Disabled">
+
+    <ShellContent
+        Title="Calculatrice"
+        ContentTemplate="{DataTemplate pages:CalculatorPage}"
+        Route="CalculatorPage" />
 
 </Shell>
